@@ -4,7 +4,7 @@ Welcome to our XLM (eXplainable Language Model Service) Repository.
 
 Find the demo application [here]().
 
-![readme_banner.png](ui%2Fimages%2Freadme_banner.png)
+![readme_banner.png](xlm%2Fui%2Fimages%2Freadme_banner.png)
 
 ## Set-Up
 
