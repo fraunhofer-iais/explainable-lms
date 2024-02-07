@@ -1,4 +1,4 @@
-# 🔍🕵️ 🦉 RAG-Ex: A generic framework for explaining Retrieval Augmented Generation
+# 🦉 RAG-Ex: A generic framework for explaining Retrieval Augmented Generation
 
 Welcome to our XLM (eXplainable Language Model Service) Repository.
 
@@ -36,4 +36,4 @@ In order to use our LMS (Language Model Service), you need to
 2. make it reachable from "http://localhost:9985" (which should be the default)
 
 [comment]: <> (add link to running mock demo)
-[comment]: <> (decide on emoji)
+[comment]: <> (add link to lms repo)
