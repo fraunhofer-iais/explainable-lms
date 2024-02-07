@@ -1,0 +1,3 @@
+Given the sentence, identify the entities and replace with their synonyms.
+Sentence: {sentence}.
+Modified Sentence:
