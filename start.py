@@ -1,7 +1,7 @@
 import sys
 
-from ui.explainer_ui import ExplainerUI
-from visualizer.visualizer import Visualizer
+from xlm.ui.explainer_ui import ExplainerUI
+from xlm.visualizer.visualizer import Visualizer
 
 
 def load_visualizer() -> Visualizer:
@@ -11,8 +11,8 @@ def load_visualizer() -> Visualizer:
 
 if __name__ == "__main__":
     interface = ExplainerUI(
-        logo_path="ui/images/iais.svg",
-        css_path="ui/css/demo.css",
+        logo_path="xlm/ui/images/iais.svg",
+        css_path="xlm/ui/css/demo.css",
         visualizer=load_visualizer(),
         window_title="RAG-Ex",
         title="✳️ RAG-Ex: Towards Generic Explainability",

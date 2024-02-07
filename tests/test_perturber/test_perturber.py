@@ -1,10 +1,10 @@
 import pytest
-from dto.dto import ExplanationGranularity
-from perturber.leave_one_out_perturber import LeaveOneOutPerturber
-from perturber.llm_based_perturber import LLMBasedPerturber
-from perturber.random_word_perturber import RandomWordPerturber
-from perturber.reorder_perturber import ReorderPerturber
-from tokenizer.custom_tokenizer import CustomTokenizer
+from xlm.dto.dto import ExplanationGranularity
+from xlm.perturber.leave_one_out_perturber import LeaveOneOutPerturber
+from xlm.perturber.llm_based_perturber import LLMBasedPerturber
+from xlm.perturber.random_word_perturber import RandomWordPerturber
+from xlm.perturber.reorder_perturber import ReorderPerturber
+from xlm.tokenizer.custom_tokenizer import CustomTokenizer
 
 
 @pytest.fixture

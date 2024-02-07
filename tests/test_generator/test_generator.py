@@ -2,7 +2,7 @@ import datetime
 from unittest.mock import MagicMock
 import pytest
 from requests import Session
-from generator.llm_generator import LLMGenerator
+from xlm.generator.llm_generator import LLMGenerator
 
 
 @pytest.fixture

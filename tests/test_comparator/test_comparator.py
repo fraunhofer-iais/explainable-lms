@@ -1,8 +1,8 @@
 from unittest.mock import MagicMock
-from comparator.embedding_comparator import EmbeddingComparator
-from comparator.generic_comparator import JaroWinklerComparator, LevenshteinComparator
-from comparator.n_gram_overlap_comparator import NGramOverlapComparator
-from encoder.encoder import Encoder
+from xlm.comparator.embedding_comparator import EmbeddingComparator
+from xlm.comparator.generic_comparator import JaroWinklerComparator, LevenshteinComparator
+from xlm.comparator.n_gram_overlap_comparator import NGramOverlapComparator
+from xlm.encoder.encoder import Encoder
 import pytest
 import numpy as np
 from tests.utils import random_vector

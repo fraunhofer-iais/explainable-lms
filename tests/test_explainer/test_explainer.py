@@ -1,10 +1,10 @@
 import pytest
 from dotenv import load_dotenv
 from requests import Session
-from dto.dto import ExplanationDto
-from explainer.aleph_alpha_explainer import AlephAlphaExplainer
-from generator.llm_generator import LLMGenerator
-from dto.dto import ExplanationGranularity
+from xlm.dto.dto import ExplanationDto
+from xlm.explainer.aleph_alpha_explainer import AlephAlphaExplainer
+from xlm.generator.llm_generator import LLMGenerator
+from xlm.dto.dto import ExplanationGranularity
 
 load_dotenv()
 

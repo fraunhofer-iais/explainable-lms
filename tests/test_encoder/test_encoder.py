@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 import pytest
 from requests import Session
 import numpy as np
-from encoder.encoder import Encoder
+from xlm.encoder.encoder import Encoder
 from tests.utils import random_vector
 
 
