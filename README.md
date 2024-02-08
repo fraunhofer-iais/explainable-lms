@@ -2,7 +2,7 @@
 
 Welcome to our XLM (eXplainable Language Model Service) Repository.
 
-Find the demo application [here]().
+Find the demo application [here](https://huggingface.co/spaces/vijusudhi/rag-ex).
 
 ![readme_banner.png](xlm%2Fui%2Fimages%2Freadme_banner.png)
 
