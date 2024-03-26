@@ -27,7 +27,7 @@ python -m spacy download de_core_news_sm
 
 ### Step 2: Start RAG-Ex
 
-You can start the UI for RAG-Ex with: `python -m xlm.start.py`.
+You can start the UI for RAG-Ex with: `python -m xlm.start`.
 
 ## Citation
 
