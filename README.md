@@ -14,7 +14,7 @@ approaches.
 
 ![readme_banner.png](xlm%2Fui%2Fimages%2Freadme_banner.png)
 
-Find the demo application [here](https://huggingface.co/spaces/vijusudhi/rag-ex).
+Find the demo application [here](https://github.com/fraunhofer-iais/language-model-service).
 
 ## How to use RAG-Ex?
 
