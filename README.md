@@ -30,10 +30,9 @@ python -m spacy download de_core_news_sm
 
 ### Step 1: Start the Language Model Service (LMS)
 
-- Follow the instructions to install the LMS by checking out [this repo]().
+- Follow the instructions to install the LMS by checking out [this repo](https://github.com/fraunhofer-iais/language-model-service).
 - Ensure the service is running at port `9985` such that ``http://localhost:9985`` is available.
 
-[comment]: <> (add link to lms repo)
 
 ### Step 2: Start RAG-Ex
 
