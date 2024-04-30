@@ -14,7 +14,7 @@ approaches.
 
 ![readme_banner.png](xlm%2Fui%2Fimages%2Freadme_banner.png)
 
-Find the demo application [here](https://github.com/fraunhofer-iais/language-model-service).
+Find the demo application [here](https://huggingface.co/spaces/vijusudhi/rag-ex).
 
 ## How to use RAG-Ex?
 
@@ -48,16 +48,16 @@ Type your input here or pick one of the examples above.
 
 #### Explanation Granularity
 
-This sets the granularity of the explanations. E.g. "WORD_LEVEL" splits the output into words and gives an importance
+This sets the granularity of the explanations. E.g. `WORD_LEVEL` splits the output into words and gives an importance
 score for every word.
-"SENTENCE_LEVEL" collects every sentence and its importance score.
+`SENTENCE_LEVEL` collects every sentence and its importance score.
 
 #### Importance Bounds
 
 The Feature importance is between 0.0 and 1.0.
 The higher, the more important was the sentence / word / ... of the input to generate the output.
 The bound settings determine, from which importance score a feature is highlighted.
-E.g. keeping the default settings (Upper=85, Middle=75, Lower=10) means that
+E.g. keeping the default settings (`Upper`=85, `Middle`=75, `Lower`=10) means that
 features with an importance higher than 0.85 are highlighted in green and
 features with an importance higher than 0.75 are highlighted yellow.
 
@@ -68,27 +68,27 @@ This model is then used to both generate the original answer and the answers of 
 
 #### Perturber
 
-Here, we determine how to perturb the input. If the granularity is SENTENCE_LEVEL, the following holds:
+Here, we determine how to perturb the input. If the granularity is `SENTENCE_LEVEL`, the following holds:
 
 | Perturber             | Explanation                                                                        |
 |-----------------------|------------------------------------------------------------------------------------|
-| leave_one_out         | For every perturbed input, we leave one sentence out.                              |
-| random_word_perturber | We insert different random words in and around the corresponding sentence.         |
-| entity_perturber      | Each entity in the sentences is replaced by random words.                          |
-| reorder_perturber     | The sentence is reordered.                                                         |
-| antonym_perturber     | One or more words in each sentence is replaced with their antonyms, if they exist. |
-| synonym_perturber     | Same as antonym_perturber, but we replace with synonyms.                           |
+| `leave_one_out`         | For every perturbed input, we leave one sentence out.                              |
+| `random_word_perturber` | We insert different random words in and around the corresponding sentence.         |
+| `entity_perturber`      | Each entity in the sentences is replaced by random words.                          |
+| `reorder_perturber`     | The sentence is reordered.                                                         |
+| `antonym_perturber`     | One or more words in each sentence is replaced with their antonyms, if they exist. |
+| `synonym_perturber`     | Same as antonym_perturber, but we replace with synonyms.                           |
 
 #### Comparator
 
-The comparator determines, how the gap between the original output and the perturbed output(s) is measured.
+The comparator determines how the gap between the original output and the perturbed output(s) is measured.
 
 | Comparator                             | Explanation                                                                                                                                    |
 |----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| sentence_transformers_based_comparator | We take the SBERT embeddings and do a cosine similarity.                                                                                       |
-| levenshtein_comparator                 | This counts, how many deletions, insertions and substitution of words within a sentence have to<br>be done to turn sentence A into sentence B. |
-| jaro_winkler_comparator                | Similar to the levenshtein_comparator, while rewarding prefixes, i.e. when two sequences have<br>the same start.                               |
-| n_gram_comparator                      | The sentences are split into adjacent word chunks of length n. The more chunks match, the closer the<br>sentences are.                         |
+| `sentence_transformers_based_comparator` | We take the SBERT embeddings and do a cosine similarity.                                                                                       |
+| `levenshtein_comparator`                 | This counts, how many deletions, insertions and substitution of words within a sentence have to<br>be done to turn sentence A into sentence B. |
+| `jaro_winkler_comparator`                | Similar to the levenshtein_comparator, while rewarding prefixes, i.e. when two sequences have<br>the same start.                               |
+| `n_gram_comparator`                      | The sentences are split into adjacent word chunks of length n. The more chunks match, the closer the<br>sentences are.                         |
 
 ## Citation
 
