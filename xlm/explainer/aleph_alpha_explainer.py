@@ -95,7 +95,7 @@ class AlephAlphaExplainer(Explainer):
     def __format_explanations(
             self, raw_explanations, user_input, reference_response
     ) -> ExplanationDto:
-        explanations = raw_explanations[1][0].items[0][0]
+        explanations = raw_explanations.explanations[0].items[0].scores
         scores = []
         features = []
         for item in explanations:

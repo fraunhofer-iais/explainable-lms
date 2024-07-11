@@ -23,5 +23,5 @@ if __name__ == "__main__":
     platform = sys.platform
     print("Platform: ", platform)
     host = "127.0.0.1" if "win" in platform else "0.0.0.0"
-    port = 8001
+    port = 8023
     app.launch(server_name=host, server_port=port)
