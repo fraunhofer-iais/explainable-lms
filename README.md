@@ -30,9 +30,9 @@ python -m spacy download de_core_news_sm
 
 ### Step 1: Start the Language Model Service (LMS)
 
-- Follow the instructions to install the LMS by checking out [this repo](https://github.com/fraunhofer-iais/language-model-service).
+- Follow the instructions to install the LMS by checking
+  out [this repo](https://github.com/fraunhofer-iais/language-model-service).
 - Ensure the service is running at port `9985` such that ``http://localhost:9985`` is available.
-
 
 ### Step 2: Start RAG-Ex
 
@@ -70,8 +70,8 @@ This model is then used to both generate the original answer and the answers of 
 
 Here, we determine how to perturb the input. If the granularity is `SENTENCE_LEVEL`, the following holds:
 
-| Perturber             | Explanation                                                                        |
-|-----------------------|------------------------------------------------------------------------------------|
+| Perturber               | Explanation                                                                        |
+|-------------------------|------------------------------------------------------------------------------------|
 | `leave_one_out`         | For every perturbed input, we leave one sentence out.                              |
 | `random_word_perturber` | We insert different random words in and around the corresponding sentence.         |
 | `entity_perturber`      | Each entity in the sentences is replaced by random words.                          |
@@ -83,8 +83,8 @@ Here, we determine how to perturb the input. If the granularity is `SENTENCE_LEV
 
 The comparator determines how the gap between the original output and the perturbed output(s) is measured.
 
-| Comparator                             | Explanation                                                                                                                                    |
-|----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| Comparator                               | Explanation                                                                                                                                    |
+|------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
 | `sentence_transformers_based_comparator` | We take the SBERT embeddings and do a cosine similarity.                                                                                       |
 | `levenshtein_comparator`                 | This counts, how many deletions, insertions and substitution of words within a sentence have to<br>be done to turn sentence A into sentence B. |
 | `jaro_winkler_comparator`                | Similar to the levenshtein_comparator, while rewarding prefixes, i.e. when two sequences have<br>the same start.                               |
@@ -95,16 +95,22 @@ The comparator determines how the gap between the original output and the pertur
 To use RAG-Ex in your publication, please cite it by using the following BibTeX entry.
 
 ```
-@inproceedings{rag-ex,
-    title = "RAG-Ex: A generic framework for explaining Retrieval Augmented Generation",
-    author = "Sudhi, Viju and
-      Bhat, Sinchana Ramakanth and
-      Rudat, Max and
-      Teucher, Roman",
-    booktitle = "Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval July 2024",
-    month = july,
-    year = "2024",
-    address = "Washington D.C., USA"
+@inproceedings{10.1145/3626772.3657660,
+    author = {Sudhi, Viju and Bhat, Sinchana Ramakanth and Rudat, Max and Teucher, Roman},
+    title = {RAG-Ex: A Generic Framework for Explaining Retrieval Augmented Generation},
+    year = {2024},
+    isbn = {9798400704314},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3626772.3657660},
+    doi = {10.1145/3626772.3657660},
+    abstract = {Owing to their size and complexity, large language models (LLMs) hardly explain why they generate a response. This effectively reduces the trust and confidence of end users in LLM-based applications, including Retrieval Augmented Generation (RAG) for Question Answering (QA) tasks. In this work, we introduce RAG-Ex, a model- and language-agnostic explanation framework that presents approximate explanations to the users revealing why the LLMs possibly generated a piece of text as a response, given the user input. Our framework is compatible with both open-source and proprietary LLMs. We report the significance scores of the approximated explanations from our generic explainer in both English and German QA tasks and also study their correlation with the downstream performance of LLMs. In the extensive user studies, our explainer yields an F1-score of 76.9\% against the end user annotations and attains almost on-par performance with model-intrinsic approaches.},
+    booktitle = {Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+    pages = {2776–2780},
+    numpages = {5},
+    keywords = {explainability, large language models, retrieval augmented generation},
+    location = {Washington DC, USA},
+    series = {SIGIR '24}
 }
 ```
 
