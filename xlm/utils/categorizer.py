@@ -41,12 +41,12 @@ class PercentileBasedCategorizer(Categorizer):
         mid_features = [
             explanation.feature
             for explanation in explanations.explanations
-            if upper_bound > explanation.score >= mid_bound > 0
+            if upper_bound > explanation.score >= mid_bound > 0 and explanation.score != 0
         ]
         low_features = [
             explanation.feature
             for explanation in explanations.explanations
-            if mid_bound > explanation.score >= lower_bound > 0
+            if mid_bound > explanation.score >= lower_bound > 0 and explanation.score != 0
         ]
 
         return pos_features, mid_features, low_features

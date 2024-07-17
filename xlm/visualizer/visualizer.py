@@ -34,6 +34,9 @@ class Visualizer:
         for explanation in explanations.explanations:
             score = round(explanation.score, 2)
 
+            if score == 0:
+                continue
+
             if explanation.feature in pos_features:
                 token_str = (
                     '<span title="'
