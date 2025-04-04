@@ -1,13 +1,15 @@
 from typing import List
 from requests import Session
 
+from xlm.registry import DEFAULT_LMS_ENDPOINT
+
 
 class Encoder:
     def __init__(
         self,
-        session: Session,
-        endpoint: str,
         model_name: str,
+        session: Session = Session(),
+        endpoint: str = DEFAULT_LMS_ENDPOINT,
     ):
         self.__session = session
         self.__endpoint = endpoint
