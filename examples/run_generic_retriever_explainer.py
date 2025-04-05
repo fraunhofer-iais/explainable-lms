@@ -24,6 +24,9 @@ if __name__ == "__main__":
 
     encoder = Encoder(model_name=encoder_model_name, endpoint=lms_endpoint)
     retriever = SBERTRetriever(encoder=encoder, corpus_documents=corpus_documents)
+    reference_text, reference_score = retriever.retrieve(
+        text=user_input, top_k=1, return_scores=True
+    )
 
     explainer = GenericRetrieverExplainer(
         perturber=perturber,
@@ -32,6 +35,8 @@ if __name__ == "__main__":
     )
     explanation_dto = explainer.explain(
         user_input=user_input,
+        reference_text=reference_text[0],
+        reference_score=reference_score[0],
         granularity=granularity,
         do_normalize_comparator_scores=True,
     )

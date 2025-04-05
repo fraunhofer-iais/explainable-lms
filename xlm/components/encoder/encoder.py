@@ -13,13 +13,13 @@ class Encoder:
     ):
         self.__session = session
         self.__endpoint = endpoint
-        self.__model_name = model_name
+        self.model_name = model_name
 
     def encode(self, texts: List[str]) -> List[List[float]]:
         response = self.__session.post(
             url=f"{self.__endpoint}/vectorize",
             params={
-                "model_name": self.__model_name,
+                "model_name": self.model_name,
             },
             json=texts,
         )

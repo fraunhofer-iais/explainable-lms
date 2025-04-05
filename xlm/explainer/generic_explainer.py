@@ -30,13 +30,14 @@ class GenericExplainer(Explainer):
     def get_features(
         self,
         input_text: str,
-        reference: str | Tuple[str, float],
+        reference_text: str,
+        reference_score: float,
         granularity: ExplanationGranularity,
     ): ...
 
     @abstractmethod
     def get_perturbations(
-        self, input_text: str, reference: str | Tuple[str, float], features: List[str]
+        self, input_text: str, reference_text: str, features: List[str]
     ): ...
 
     @abstractmethod
@@ -47,7 +48,8 @@ class GenericExplainer(Explainer):
     @abstractmethod
     def get_comparator_scores(
         self,
-        reference: str | float,
+        reference_text: str,
+        reference_score: float,
         results: List[str] | List[float],
         do_normalize_scores: bool,
     ): ...
@@ -58,31 +60,30 @@ class GenericExplainer(Explainer):
         granularity: ExplanationGranularity,
         model_name: Optional[str] = None,
         do_normalize_comparator_scores: bool = True,
-        system_response: Optional[str] = None,
+        reference_text: Optional[str] = None,
+        reference_score: Optional[str] = None,
     ) -> ExplanationDto:
-        input_text = user_input
-
-        reference = self.get_reference(input_text=input_text)
-
         features = self.get_features(
-            input_text=input_text,
-            reference=reference,
+            input_text=user_input,
+            reference_text=reference_text,
+            reference_score=reference_score,
             granularity=granularity,
         )
 
         perturbations = self.get_perturbations(
-            input_text=input_text,
-            reference=reference,
+            input_text=user_input,
+            reference_text=reference_text,
             features=features,
         )
 
         responses = self.get_post_perturbation_results(
-            input_text=input_text,
+            input_text=user_input,
             perturbations=perturbations,
         )
 
         scores = self.get_comparator_scores(
-            reference=reference,
+            reference_text=reference_text,
+            reference_score=reference_score,
             results=responses,
             do_normalize_scores=do_normalize_comparator_scores,
         )
@@ -90,7 +91,7 @@ class GenericExplainer(Explainer):
         explanation_dto = self.__get_explanation_dto(
             features=features,
             scores=scores,
-            input_text=input_text,
+            input_text=user_input,
             # output_text=reference,
         )
 

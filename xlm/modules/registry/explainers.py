@@ -1,5 +1,6 @@
 from requests import Session
-from xlm.explainer.aleph_alpha_explainer import AlephAlphaExplainer
+
+# from xlm.explainer.aleph_alpha_explainer import AlephAlphaExplainer
 from xlm.explainer.explainer import Explainer
 from xlm.explainer.generic_explainer import GenericExplainer
 from xlm.components.generator.llm_generator import LLMGenerator
@@ -10,7 +11,7 @@ from xlm.modules.tokenizer.custom_tokenizer import CustomTokenizer
 
 EXPLAINERS = {
     "generic_explainer": "generic_explainer",
-    "aleph_alpha_explainer": "aleph_alpha_explainer",
+    # "aleph_alpha_explainer": "aleph_alpha_explainer",
 }
 
 
@@ -24,7 +25,8 @@ def load_explainer(
     generator = LLMGenerator(session=Session(), endpoint=lms_endpoint)
 
     if explainer_name == "aleph_alpha_explainer":
-        explainer = AlephAlphaExplainer(generator=generator)
+        # explainer = AlephAlphaExplainer(generator=generator)
+        raise NotImplementedError
     elif explainer_name == "generic_explainer":
         tokenizer = CustomTokenizer()
         perturber = load_perturber(perturber_name=perturber_name)

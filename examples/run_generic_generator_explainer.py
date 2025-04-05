@@ -26,6 +26,7 @@ if __name__ == "__main__":
     comparator = load_comparator(comparator_name=comparator_name)
 
     generator = LLMGenerator(endpoint=lms_endpoint, model_name=generator_model_name)
+    reference_text = generator.generate(texts=[user_input])
 
     explainer = GenericGeneratorExplainer(
         perturber=perturber,
@@ -35,6 +36,8 @@ if __name__ == "__main__":
 
     explanation_dto = explainer.explain(
         user_input=user_input,
+        reference_text=reference_text[0],
+        reference_score=None,
         granularity=granularity,
         do_normalize_comparator_scores=True,
     )

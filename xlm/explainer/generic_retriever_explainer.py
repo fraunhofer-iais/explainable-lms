@@ -25,19 +25,20 @@ class GenericRetrieverExplainer(GenericExplainer):
     def get_features(
         self,
         input_text: str,
+        reference_text: str,
+        reference_score: float,
         granularity: ExplanationGranularity,
-        reference: str | Tuple[str, float],
     ):
-        features = self.tokenizer.tokenize(text=reference[0], granularity=granularity)
+        features = self.tokenizer.tokenize(text=reference_text, granularity=granularity)
         return features
 
     def get_perturbations(
         self,
         input_text: str,
-        reference: str | Tuple[str, float],
+        reference_text: str,
         features: List[str],
     ):
-        perturbations = self.perturber.perturb(text=reference[0], features=features)
+        perturbations = self.perturber.perturb(text=reference_text, features=features)
         return perturbations
 
     def get_reference(self, input_text: str) -> Tuple[str, float]:
@@ -65,70 +66,14 @@ class GenericRetrieverExplainer(GenericExplainer):
 
     def get_comparator_scores(
         self,
-        reference: str | float,
+        reference_text: str,
+        reference_score: float,
         results: List[str] | List[float],
         do_normalize_scores: bool,
     ):
         scores = self.comparator.compare(
-            reference_text=reference[1],
+            reference_text=reference_score,
             texts=results,
             do_normalize_scores=do_normalize_scores,
         )
         return scores
-
-    # def explain(
-    #     self,
-    #     user_input: str,
-    #     granularity: ExplanationGranularity,
-    #     model_name: Optional[str] = None,
-    #     do_normalize_comparator_scores: bool = True,
-    #     system_response: Optional[str] = None,
-    # ) -> ExplanationDto | List[ExplanationDto]:
-    #     input_text = user_input
-    #
-    #     retrieved_documents, reference_scores = self.retriever.retrieve(
-    #         text=input_text, top_k=3, return_scores=True
-    #     )
-    #
-    #     explanation_dtos = []
-    #     for retrieved_document, reference_score in zip(
-    #         retrieved_documents, reference_scores
-    #     ):
-    #         document_features = self.tokenizer.tokenize(
-    #             text=retrieved_document, granularity=granularity
-    #         )
-    #
-    #         perturbations = self.perturber.perturb(
-    #             text=retrieved_document, features=document_features
-    #         )
-    #
-    #         perturbed_document_embeddings = self.retriever.encoder.encode(
-    #             texts=perturbations
-    #         )
-    #         self.retriever.corpus_embeddings = perturbed_document_embeddings
-    #         self.retriever.corpus_documents = perturbations
-    #
-    #         retrieved_perturbed_documents, scores_with_perturbed_documents = (
-    #             self.retriever.retrieve(
-    #                 text=input_text,
-    #                 top_k=len(self.retriever.corpus_documents),
-    #                 return_scores=True,
-    #             )
-    #         )
-    #
-    #         scores = self.comparator.compare(
-    #             reference_text=reference_score,
-    #             texts=scores_with_perturbed_documents,
-    #             do_normalize_scores=do_normalize_comparator_scores,
-    #         )
-    #
-    #         explanation_dto = self.__get_explanation_dto(
-    #             features=document_features,
-    #             scores=scores,
-    #             input_text=input_text,
-    #             output_text=retrieved_document,
-    #         )
-    #
-    #         explanation_dtos.append(explanation_dto)
-    #
-    #     return explanation_dtos

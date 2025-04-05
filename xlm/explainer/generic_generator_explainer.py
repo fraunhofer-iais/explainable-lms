@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 
 from xlm.components.generator.generator import Generator
 from xlm.dto.dto import ExplanationGranularity
@@ -25,8 +25,9 @@ class GenericGeneratorExplainer(GenericExplainer):
     def get_features(
         self,
         input_text: str,
+        reference_text: str,
+        reference_score: float,
         granularity: ExplanationGranularity,
-        reference: str | Tuple[str, float],
     ):
         features = self.tokenizer.tokenize(text=input_text, granularity=granularity)
         return features
@@ -34,7 +35,7 @@ class GenericGeneratorExplainer(GenericExplainer):
     def get_perturbations(
         self,
         input_text: str,
-        reference: str | Tuple[str, float],
+        reference_text: str,
         features: List[str],
     ):
         perturbations = self.perturber.perturb(text=input_text, features=features)
@@ -54,12 +55,13 @@ class GenericGeneratorExplainer(GenericExplainer):
 
     def get_comparator_scores(
         self,
-        reference: str | float,
+        reference_text: str,
+        reference_score: float,
         results: List[str] | List[float],
         do_normalize_scores: bool,
     ):
         scores = self.comparator.compare(
-            reference_text=reference,
+            reference_text=reference_text,
             texts=results,
             do_normalize_scores=do_normalize_scores,
         )

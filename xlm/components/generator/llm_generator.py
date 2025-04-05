@@ -27,18 +27,15 @@ class LLMGenerator(Generator):
         self.__frequency_penalty = frequency_penalty
         self.__presence_penalty = presence_penalty
         self.__num_threads = num_threads
-        self.__model_name = model_name
+        self.model_name = model_name
 
     def generate(self, texts: List[str]) -> List[str]:
         if self.__num_threads == 1:
             return [
-                self.__generate(text=text, model_name=self.__model_name)
-                for text in texts
+                self.__generate(text=text, model_name=self.model_name) for text in texts
             ]
         else:
-            return self.__generate_multi_thread(
-                texts=texts, model_name=self.__model_name
-            )
+            return self.__generate_multi_thread(texts=texts, model_name=self.model_name)
 
     def __generate(
         self,

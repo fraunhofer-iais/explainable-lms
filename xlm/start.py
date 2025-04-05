@@ -1,6 +1,6 @@
 import sys
 
-from xlm.ui import RetrieverExplainerUI
+from xlm.ui.rag_explainer_ui import RagExplainerUI
 from xlm.utils.visualizer import Visualizer
 
 
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     #     title="✳️ RAG-Ex: Towards Generic Explainability",
     # )
 
-    interface = RetrieverExplainerUI(
+    interface = RagExplainerUI(
         logo_path="xlm/ui/images/iais.svg",
         css_path="xlm/ui/css/demo.css",
         visualizer=load_visualizer(),
