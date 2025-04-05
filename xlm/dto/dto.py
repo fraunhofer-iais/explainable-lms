@@ -12,7 +12,7 @@ class FeatureImportance(BaseModel):
 class ExplanationDto(BaseModel):
     explanations: List[FeatureImportance]
     input_text: str
-    output_text: str
+    output_text: Optional[str] = None
 
 
 class ExplanationGranularity(str, Enum):

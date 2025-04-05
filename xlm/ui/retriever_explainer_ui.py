@@ -1,16 +1,22 @@
 from typing import List, Optional
 import gradio as gr
 from gradio.components import Markdown
-from xlm.modules.registry.comparators import COMPARATORS
-from xlm.modules.registry.explainers import load_explainer, EXPLAINERS
+from datasets import load_dataset
+
+from xlm.components.encoder.encoder import Encoder
+from xlm.explainer.generic_retriever_explainer import GenericRetrieverExplainer
+from xlm.modules.registry.comparators import COMPARATORS, load_comparator
+from xlm.modules.registry.explainers import EXPLAINERS
 from xlm.modules.registry.models import MODELS
-from xlm.modules.registry.perturbers import PERTURBERS
+from xlm.modules.registry.perturbers import PERTURBERS, load_perturber
+from xlm.components.retriever.sbert_retriever import SBERTRetriever
+from xlm.modules.tokenizer.custom_tokenizer import CustomTokenizer
 from xlm.utils.categorizer import PercentileBasedCategorizer
 from xlm.utils.visualizer import Visualizer
 from xlm.dto.dto import ExplanationDto, ExplanationGranularity
 
 
-class ExplainerUI:
+class RetrieverExplainerUI:
     def __init__(
         self,
         logo_path: str,
@@ -85,28 +91,57 @@ class ExplainerUI:
         perturber_name: str,
         comparator_name: str,
     ):
-        explainer = load_explainer(
-            explainer_name=explainer_name,
-            model_name=model_name,
-            perturber_name=perturber_name,
-            comparator_name=comparator_name,
+        tokenizer = CustomTokenizer()
+
+        perturber_name = "leave_one_out"
+        comparator_name = "score_comparator"
+
+        perturber = load_perturber(perturber_name=perturber_name)
+        comparator = load_comparator(comparator_name=comparator_name)
+
+        # ds = load_dataset("google/xquad", "xquad.en")
+        ds = load_dataset("microsoft/ms_marco", "v1.1", split="test")
+        passages = []
+        for item in ds.select(range(5)):
+            passages.extend(item["passages"]["passage_text"])
+        corpus_documents = list(set(passages))
+
+        # corpus_documents = list(set(ds["validation"]["context"]))[:100]
+        encoder = Encoder(model_name="sentence-transformers")
+        retriever = SBERTRetriever(encoder=encoder, corpus_documents=corpus_documents)
+        explainer = GenericRetrieverExplainer(
+            tokenizer=tokenizer,
+            perturber=perturber,
+            retriever=retriever,
+            comparator=comparator,
         )
-        explanation_dto = explainer.explain(
+
+        explanation_dtos = explainer.explain(
             user_input=user_input,
             granularity=granularity,
             model_name=model_name,
         )
 
-        system_response = explanation_dto.output_text
-        generator_vis = self.__visualize_explanations(
-            user_input=user_input,
-            system_response=system_response,
-            generator_explanations=explanation_dto,
-            upper_percentile=int(upper_percentile),
-            middle_percentile=int(middle_percentile),
-            lower_percentile=int(lower_percentile),
-        )
-        return system_response, generator_vis
+        system_responses = []
+        generator_vis_es = []
+        for explanation_dto in explanation_dtos:
+            system_response = explanation_dto.output_text
+            generator_vis = self.__visualize_explanations(
+                user_input=explanation_dto.output_text,
+                system_response=system_response,
+                generator_explanations=explanation_dto,
+                upper_percentile=int(upper_percentile),
+                middle_percentile=int(middle_percentile),
+                lower_percentile=int(lower_percentile),
+            )
+
+            system_responses.append(system_response)
+            generator_vis_es.append(generator_vis)
+
+        system_responses = "\n".join(system_responses)
+        generator_vis_es = "\n".join(generator_vis_es)
+
+        return system_responses, generator_vis_es
 
     def __build_app_title(self):
         with gr.Row():

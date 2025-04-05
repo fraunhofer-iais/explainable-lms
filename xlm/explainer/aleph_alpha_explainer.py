@@ -10,14 +10,14 @@ from aleph_alpha_client import (
     TargetGranularity,
 )
 
-from xlm.dto.dto import (
-    ExplanationDto,
+from xlm import (
+    Explainer,
+    Generator,
     ExplanationGranularity,
+    ExplanationDto,
     FeatureImportance,
 )
-from xlm.explainer.explainer import Explainer
-from xlm.generator.generator import Generator
-from xlm.registry.models import get_aleph_alpha_models_from_lms
+from xlm.modules.registry import get_aleph_alpha_models_from_lms
 
 
 class AlephAlphaExplainer(Explainer):
@@ -35,13 +35,13 @@ class AlephAlphaExplainer(Explainer):
             )
 
     def explain(
-            self,
-            user_input: str,
-            granularity: ExplanationGranularity,
-            model_name: Optional[str] = None,
-            normalize: Optional[bool] = True,
-            system_response: Optional[str] = None,
-            maximum_tokens: Optional[int] = 100
+        self,
+        user_input: str,
+        granularity: ExplanationGranularity,
+        model_name: Optional[str] = None,
+        normalize: Optional[bool] = True,
+        system_response: Optional[str] = None,
+        maximum_tokens: Optional[int] = 100,
     ) -> ExplanationDto:
         self.__validate_model_name(model_name)
         reference_response = (
@@ -84,7 +84,6 @@ class AlephAlphaExplainer(Explainer):
     def __get_aleph_alpha_models_from_lms(self) -> dict[str, str]:
         return get_aleph_alpha_models_from_lms()
 
-
     def __get_prompt_granularity(self, granularity: ExplanationGranularity):
         return {
             ExplanationGranularity.WORD_LEVEL: "word",
@@ -93,7 +92,7 @@ class AlephAlphaExplainer(Explainer):
         }[granularity]
 
     def __format_explanations(
-            self, raw_explanations, user_input, reference_response
+        self, raw_explanations, user_input, reference_response
     ) -> ExplanationDto:
         explanations = raw_explanations.explanations[0].items[0].scores
         scores = []
@@ -112,4 +111,3 @@ class AlephAlphaExplainer(Explainer):
             input_text=user_input,
             output_text=reference_response,
         )
-
