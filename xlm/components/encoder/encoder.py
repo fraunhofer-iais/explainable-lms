@@ -1,7 +1,7 @@
 from typing import List
 from requests import Session
 
-from xlm.modules.registry import DEFAULT_LMS_ENDPOINT
+from xlm.registry import DEFAULT_LMS_ENDPOINT
 
 
 class Encoder:

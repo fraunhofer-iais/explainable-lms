@@ -3,7 +3,7 @@ from typing import List, Dict
 from requests import Session
 
 from xlm.components.generator.generator import Generator
-from xlm.modules.registry import DEFAULT_LMS_ENDPOINT
+from xlm.registry import DEFAULT_LMS_ENDPOINT
 
 
 class LLMGenerator(Generator):

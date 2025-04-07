@@ -2,8 +2,8 @@ from xlm.components.encoder.encoder import Encoder
 from xlm.components.retriever.sbert_retriever import SBERTRetriever
 from xlm.dto.dto import ExplanationGranularity
 from xlm.explainer.generic_retriever_explainer import GenericRetrieverExplainer
-from xlm.modules.registry.comparators import load_comparator
-from xlm.modules.registry.perturbers import load_perturber
+from xlm.registry.comparators import load_comparator
+from xlm.registry.perturbers import load_perturber
 
 if __name__ == "__main__":
     perturber_name = "leave_one_out"

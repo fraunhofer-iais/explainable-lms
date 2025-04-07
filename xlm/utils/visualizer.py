@@ -1,6 +1,7 @@
-from xlm.utils.categorizer import Categorizer
-from xlm.dto.dto import ExplanationDto
+import re
 
+from xlm.utils.categorizer import Categorizer
+from xlm.dto.dto import ExplanationDto, ExplanationGranularity
 
 UPPER_COLOR = "#D4EFDF"  # green
 MID_COLOR = "#FBFBB8BF"  # amber
@@ -17,6 +18,7 @@ class Visualizer:
         segregator: Categorizer,
         explanations: ExplanationDto,
         output_from_explanations: str,
+        granularity: ExplanationGranularity,
         avoid_exp_label: bool = False,
         avoid_legend: bool = False,
     ) -> str:
@@ -69,7 +71,13 @@ class Visualizer:
                     + "</span>"
                 )
 
-            highlighted_text = highlighted_text.replace(explanation.feature, token_str)
+            if granularity == ExplanationGranularity.WORD_LEVEL:
+                pattern = (
+                    r"\b" + re.escape(explanation.feature) + r"\b"
+                )  # needed to separate word boundaries
+            else:
+                pattern = re.escape(explanation.feature)
+            highlighted_text = re.sub(pattern, token_str, highlighted_text)
 
         if avoid_exp_label:
             vis = "<p>" + highlighted_text + "</p>"
@@ -77,14 +85,20 @@ class Visualizer:
             vis = "<p><b>Explanations:</b><br>" + highlighted_text + "</p>"
         vis = vis.replace("\n", "<br>")
 
-        legend = "<p align='right'"
+        if avoid_legend:
+            html_str = vis
+        else:
+            legend = self.build_legend()
+            html_str = legend + vis
 
+        return html_str
+
+    def build_legend(self):
+        legend = "<p align='right'"
         legend += (
             '<span title="' + '"style="color:' + LOW_COLOR + '">' + "💡" + "</span>"
         )
-
         legend += "&emsp;"
-
         legend += (
             '<span title="'
             + '"style="color:'
@@ -93,9 +107,7 @@ class Visualizer:
             + "not important"
             + "</span>"
         )
-
         legend += "&emsp;⇢&emsp;"
-
         legend += (
             '<span title="'
             + '"style="font-weight:bold;background-color:'
@@ -104,9 +116,7 @@ class Visualizer:
             + " important "
             + "</span>"
         )
-
         legend += "&emsp;⇢&emsp;"
-
         legend += (
             '<span title="'
             + '"style="font-weight:bold;background-color:'
@@ -115,12 +125,5 @@ class Visualizer:
             + " very important "
             + "</span>"
         )
-
         legend += "</p>"
-
-        if avoid_legend:
-            html_str = vis
-        else:
-            html_str = legend + vis
-
-        return html_str
+        return legend

@@ -3,15 +3,12 @@ from typing import List, Optional
 import gradio as gr
 from gradio.components import Markdown
 
-from xlm.components.encoder.encoder import Encoder
-from xlm.components.generator.llm_generator import LLMGenerator
 from xlm.components.rag_system.rag_system import RagSystem
-from xlm.components.retriever.sbert_retriever import SBERTRetriever
 from xlm.dto.dto import ExplanationDto, ExplanationGranularity
 from xlm.explainer.generic_generator_explainer import GenericGeneratorExplainer
 from xlm.explainer.generic_retriever_explainer import GenericRetrieverExplainer
-from xlm.modules.registry.comparators import load_comparator
-from xlm.modules.registry.perturbers import load_perturber
+from xlm.registry.comparators import load_comparator
+from xlm.registry.perturbers import load_perturber
 from xlm.utils.categorizer import PercentileBasedCategorizer
 from xlm.utils.visualizer import Visualizer
 
@@ -24,6 +21,7 @@ class RagExplainerUI:
         visualizer: Visualizer,
         window_title: str,
         title: str,
+        rag_system: RagSystem,
         examples: Optional[List[str]] = None,
     ):
         self.__logo_path = logo_path
@@ -44,13 +42,10 @@ class RagExplainerUI:
         self.lms_endpoint = "http://localhost:9985"
         self.data_path = "data/climate_change.txt"
 
-        self.retriever = self.get_retriever()
+        self.rag_system = rag_system
+
         self.retriever_explainer = self.get_retriever_explainer()
-
-        self.generator = self.get_generator()
         self.generator_explainer = self.get_generator_explainer()
-
-        self.rag_system = self.get_rag_system()
 
         self.app: gr.Blocks = self.build_app()
 
@@ -69,7 +64,7 @@ class RagExplainerUI:
             self.__build_app_title()
             (
                 user_input,
-                granularity,
+                # granularity,
                 # upper_percentile,
                 # middle_percentile,
                 # lower_percentile,
@@ -90,7 +85,7 @@ class RagExplainerUI:
                 fn=self.run,
                 inputs=[
                     user_input,
-                    granularity,
+                    # granularity,
                     # upper_percentile,
                     # middle_percentile,
                     # lower_percentile,
@@ -121,38 +116,46 @@ class RagExplainerUI:
         perturber_name: str,
         comparator_name: str,
     ):
+        if len(user_input) == 0:
+            gr.Error("Please provide an input!")
+            return None
+
         rag_output = self.rag_system.run(user_input=user_input)
 
+        retriever_explanation_granularity = ExplanationGranularity.WORD_LEVEL
         retriever_explanation_dto = self.retriever_explainer.explain(
             user_input=user_input,
             reference_text=rag_output.retrieved_documents[0],
             reference_score=rag_output.retriever_scores[0],
-            granularity=granularity,
-            do_normalize_comparator_scores=True,
-        )
-
-        generator_explanation_dto = self.generator_explainer.explain(
-            user_input=user_input,
-            reference_text=rag_output.generated_responses[0],
-            reference_score=None,
-            granularity=granularity,
+            granularity=retriever_explanation_granularity,
             do_normalize_comparator_scores=True,
         )
 
         retriever_explanations_vis = self.__visualize_explanations(
             text_to_visualize=rag_output.retrieved_documents[0],
             explanation_dto=retriever_explanation_dto,
-            # upper_percentile=int(upper_percentile),
-            # middle_percentile=int(middle_percentile),
-            # lower_percentile=int(lower_percentile),
+            granularity=retriever_explanation_granularity,
+            upper_percentile=85,
+            middle_percentile=75,
+            lower_percentile=10,
+        )
+
+        generator_explanation_granularity = ExplanationGranularity.SENTENCE_LEVEL
+        generator_explanation_dto = self.generator_explainer.explain(
+            user_input=user_input,
+            reference_text=rag_output.generated_responses[0],
+            reference_score=None,
+            granularity=generator_explanation_granularity,
+            do_normalize_comparator_scores=True,
         )
 
         generator_explanations_vis = self.__visualize_explanations(
             text_to_visualize=rag_output.prompt,
             explanation_dto=generator_explanation_dto,
-            # upper_percentile=int(upper_percentile),
-            # middle_percentile=int(middle_percentile),
-            # lower_percentile=int(lower_percentile),
+            granularity=generator_explanation_granularity,
+            upper_percentile=85,
+            middle_percentile=65,
+            lower_percentile=5,
         )
 
         retrieved_document = rag_output.retrieved_documents[0]
@@ -168,17 +171,7 @@ class RagExplainerUI:
             generator_explanations_vis,
         )
 
-    def get_retriever(self):
-        encoder = self.get_encoder()
-        with open(self.data_path, encoding="utf-8") as f:
-            data = f.readlines()
-        corpus_documents = [item.strip() for item in data if item.strip()]
-        return SBERTRetriever(encoder=encoder, corpus_documents=corpus_documents)
-
-    def get_encoder(self):
-        return Encoder(model_name=self.encoder_model_name, endpoint=self.lms_endpoint)
-
-    def get_retriever_explainer(self):
+    def get_retriever_explainer(self) -> GenericRetrieverExplainer:
         retriever_perturber = load_perturber(
             perturber_name=self.retriever_perturber_name
         )
@@ -189,17 +182,12 @@ class RagExplainerUI:
         retriever_explainer = GenericRetrieverExplainer(
             perturber=retriever_perturber,
             comparator=retriever_comparator,
-            retriever=self.retriever,
+            retriever=self.rag_system.retriever,
         )
 
         return retriever_explainer
 
-    def get_generator(self):
-        return LLMGenerator(
-            endpoint=self.lms_endpoint, model_name=self.generator_model_name
-        )
-
-    def get_generator_explainer(self):
+    def get_generator_explainer(self) -> GenericGeneratorExplainer:
         generator_perturber = load_perturber(
             perturber_name=self.generator_perturber_name
         )
@@ -210,20 +198,10 @@ class RagExplainerUI:
         generator_explainer = GenericGeneratorExplainer(
             perturber=generator_perturber,
             comparator=generator_comparator,
-            generator=self.generator,
+            generator=self.rag_system.generator,
         )
 
         return generator_explainer
-
-    def get_rag_system(self):
-        prompt_template = "Context: {context}\nQuestion: {question}\n\nAnswer:"
-        system = RagSystem(
-            retriever=self.retriever,
-            generator=self.generator,
-            prompt_template=prompt_template,
-            retriever_top_k=1,
-        )
-        return system
 
     def __build_app_title(self):
         with gr.Row():
@@ -250,12 +228,12 @@ class RagExplainerUI:
                 container=True,
                 lines=1,
             )
-        with gr.Row():
-            granularity = gr.Radio(
-                choices=[e for e in ExplanationGranularity],
-                value=ExplanationGranularity.SENTENCE_LEVEL,
-                label="Explanation Granularity",
-            )
+        # with gr.Row():
+        #     granularity = gr.Radio(
+        #         choices=[e for e in ExplanationGranularity],
+        #         value=ExplanationGranularity.SENTENCE_LEVEL,
+        #         label="Explanation Granularity",
+        #     )
 
         # with gr.Accordion(label="Settings", open=False, elem_id="accordion"):
         # with gr.Row(variant="compact"):
@@ -341,7 +319,7 @@ class RagExplainerUI:
 
         return (
             user_input,
-            granularity,
+            # granularity,
             # upper_percentile,
             # middle_percentile,
             # lower_percentile,
@@ -362,6 +340,7 @@ class RagExplainerUI:
         self,
         text_to_visualize: str,
         explanation_dto: ExplanationDto,
+        granularity: ExplanationGranularity,
         upper_percentile: Optional[int] = 85,
         middle_percentile: Optional[int] = 75,
         lower_percentile: Optional[int] = 10,
@@ -377,4 +356,5 @@ class RagExplainerUI:
             output_from_explanations=text_to_visualize,
             avoid_exp_label=True,
             avoid_legend=True,
+            granularity=granularity,
         )

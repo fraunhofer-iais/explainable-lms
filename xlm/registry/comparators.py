@@ -7,7 +7,8 @@ from xlm.modules.comparator.generic_comparator import (
 from xlm.modules.comparator.n_gram_overlap_comparator import NGramOverlapComparator
 from xlm.modules.comparator.score_comaprator import ScoreComparator
 from xlm.components.encoder.encoder import Encoder
-from xlm.modules.registry import DEFAULT_LMS_ENDPOINT
+from xlm.registry import DEFAULT_LMS_ENDPOINT
+from xlm.registry.encoder import load_encoder
 
 levenshtein_comparator = LevenshteinComparator()
 jaro_winkler_comparator = JaroWinklerComparator()
@@ -29,14 +30,6 @@ COMPARATORS = {
     "n_gram_comparator": n_gram_comparator,
     "score_comparator": score_comparator,
 }
-
-
-def load_encoder(model_name: str):
-    return Encoder(
-        model_name=model_name,
-        session=Session(),
-        endpoint=DEFAULT_LMS_ENDPOINT,
-    )
 
 
 def load_comparator(comparator_name: str, model_name: str = None):

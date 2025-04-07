@@ -1,10 +1,10 @@
 from typing import List, Optional
 import gradio as gr
 from gradio.components import Markdown
-from xlm.modules.registry.comparators import COMPARATORS
-from xlm.modules.registry.explainers import load_explainer, EXPLAINERS
-from xlm.modules.registry.models import MODELS
-from xlm.modules.registry.perturbers import PERTURBERS
+from xlm.registry import COMPARATORS
+from xlm.registry.explainers import load_explainer, EXPLAINERS
+from xlm.registry import MODELS
+from xlm.registry import PERTURBERS
 from xlm.utils.categorizer import PercentileBasedCategorizer
 from xlm.utils.visualizer import Visualizer
 from xlm.dto.dto import ExplanationDto, ExplanationGranularity

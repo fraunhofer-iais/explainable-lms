@@ -1,8 +1,8 @@
 from xlm.components.generator.llm_generator import LLMGenerator
 from xlm.dto.dto import ExplanationGranularity
 from xlm.explainer.generic_generator_explainer import GenericGeneratorExplainer
-from xlm.modules.registry.comparators import load_comparator
-from xlm.modules.registry.perturbers import load_perturber
+from xlm.registry.comparators import load_comparator
+from xlm.registry.perturbers import load_perturber
 
 if __name__ == "__main__":
     perturber_name = "leave_one_out"

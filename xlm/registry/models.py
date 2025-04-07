@@ -1,6 +1,6 @@
 from typing import Dict
 import requests
-from xlm.modules.registry import DEFAULT_LMS_ENDPOINT
+from xlm.registry import DEFAULT_LMS_ENDPOINT
 
 
 def get_models_from_lms(lms_endpoint: str = DEFAULT_LMS_ENDPOINT) -> Dict[str, str]:

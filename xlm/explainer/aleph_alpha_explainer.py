@@ -17,7 +17,7 @@ from xlm import (
     ExplanationDto,
     FeatureImportance,
 )
-from xlm.modules.registry import get_aleph_alpha_models_from_lms
+from xlm.registry import get_aleph_alpha_models_from_lms
 
 
 class AlephAlphaExplainer(Explainer):

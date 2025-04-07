@@ -2,7 +2,7 @@ from typing import List
 from requests import Session
 from xlm.components.generator.llm_generator import LLMGenerator
 from xlm.modules.perturber.perturber import Perturber
-from xlm.modules.registry import DEFAULT_LMS_ENDPOINT
+from xlm.registry import DEFAULT_LMS_ENDPOINT
 
 
 class LLMBasedPerturber(Perturber):
