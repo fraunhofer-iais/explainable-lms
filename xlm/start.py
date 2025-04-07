@@ -22,8 +22,8 @@ if __name__ == "__main__":
         logo_path="xlm/ui/images/iais.svg",
         css_path="xlm/ui/css/demo.css",
         visualizer=load_visualizer(),
-        window_title="RAG-Ex",
-        title="✳️ RAG-Ex: Towards Generic Explainability",
+        window_title="RAG-Ex 2.0",
+        title="✳️ RAG-Ex 2.0: Towards Generic Explainability",
     )
     app = interface.build_app()
     app.queue()

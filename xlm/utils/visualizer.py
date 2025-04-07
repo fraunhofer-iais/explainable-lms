@@ -18,6 +18,7 @@ class Visualizer:
         explanations: ExplanationDto,
         output_from_explanations: str,
         avoid_exp_label: bool = False,
+        avoid_legend: bool = False,
     ) -> str:
         highlighted_text = output_from_explanations
 
@@ -117,6 +118,9 @@ class Visualizer:
 
         legend += "</p>"
 
-        html_str = legend + vis
+        if avoid_legend:
+            html_str = vis
+        else:
+            html_str = legend + vis
 
         return html_str

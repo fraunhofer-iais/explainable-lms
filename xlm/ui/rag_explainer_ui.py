@@ -56,7 +56,9 @@ class RagExplainerUI:
 
     def build_app(self):
         with gr.Blocks(
-            theme=gr.themes.Monochrome().set(
+            theme=gr.themes.Monochrome(
+                font=[gr.themes.GoogleFont("Quicksand"), "Arial", "sans-serif"]
+            ).set(
                 button_primary_background_fill="#009374",
                 button_primary_background_fill_hover="#009374C4",
                 checkbox_label_background_fill_selected="#028A6EFF",
@@ -68,14 +70,15 @@ class RagExplainerUI:
             (
                 user_input,
                 granularity,
-                upper_percentile,
-                middle_percentile,
-                lower_percentile,
+                # upper_percentile,
+                # middle_percentile,
+                # lower_percentile,
                 # explainer_name,
                 # model_name,
                 # perturber_name,
                 # comparator_name,
                 submit_btn,
+                user_input_text,
                 retrieved_document,
                 prompt,
                 generated_response,
@@ -88,15 +91,16 @@ class RagExplainerUI:
                 inputs=[
                     user_input,
                     granularity,
-                    upper_percentile,
-                    middle_percentile,
-                    lower_percentile,
+                    # upper_percentile,
+                    # middle_percentile,
+                    # lower_percentile,
                     # explainer_name,
                     # model_name,
                     # perturber_name,
                     # comparator_name,
                 ],
                 outputs=[
+                    user_input_text,
                     retrieved_document,
                     prompt,
                     generated_response,
@@ -138,17 +142,17 @@ class RagExplainerUI:
         retriever_explanations_vis = self.__visualize_explanations(
             text_to_visualize=rag_output.retrieved_documents[0],
             explanation_dto=retriever_explanation_dto,
-            upper_percentile=int(upper_percentile),
-            middle_percentile=int(middle_percentile),
-            lower_percentile=int(lower_percentile),
+            # upper_percentile=int(upper_percentile),
+            # middle_percentile=int(middle_percentile),
+            # lower_percentile=int(lower_percentile),
         )
 
         generator_explanations_vis = self.__visualize_explanations(
             text_to_visualize=rag_output.prompt,
             explanation_dto=generator_explanation_dto,
-            upper_percentile=int(upper_percentile),
-            middle_percentile=int(middle_percentile),
-            lower_percentile=int(lower_percentile),
+            # upper_percentile=int(upper_percentile),
+            # middle_percentile=int(middle_percentile),
+            # lower_percentile=int(lower_percentile),
         )
 
         retrieved_document = rag_output.retrieved_documents[0]
@@ -156,6 +160,7 @@ class RagExplainerUI:
         generated_response = rag_output.generated_responses[0]
 
         return (
+            user_input,
             retrieved_document,
             prompt,
             generated_response,
@@ -239,56 +244,55 @@ class RagExplainerUI:
 
     def __build_chat_and_explain(self):
         with gr.Row():
-            with gr.Column(scale=2):
-                user_input = gr.Textbox(
-                    placeholder="Type your question here and press Enter.",
-                    label="Question",
-                    container=True,
-                    lines=10,
-                )
-            with gr.Column(scale=1):
-                granularity = gr.Radio(
-                    choices=[e for e in ExplanationGranularity],
-                    value=ExplanationGranularity.SENTENCE_LEVEL,
-                    label="Explanation Granularity",
-                )
+            user_input = gr.Textbox(
+                placeholder="Type your question here and press Enter.",
+                label="Question",
+                container=True,
+                lines=1,
+            )
+        with gr.Row():
+            granularity = gr.Radio(
+                choices=[e for e in ExplanationGranularity],
+                value=ExplanationGranularity.SENTENCE_LEVEL,
+                label="Explanation Granularity",
+            )
 
-        with gr.Accordion(label="Settings", open=False, elem_id="accordion"):
-            # with gr.Row(variant="compact"):
-            #     explainer_name = gr.Radio(
-            #         label="Explainer",
-            #         choices=list(EXPLAINERS.keys()),
-            #         value=list(EXPLAINERS.keys())[0],
-            #         container=True,
-            #     )
-            with gr.Row(variant="compact"):
-                upper_percentile = gr.Textbox(label="Upper", value="85", container=True)
-                middle_percentile = gr.Textbox(
-                    label="Middle", value="75", container=True
-                )
-                lower_percentile = gr.Textbox(label="Lower", value="10", container=True)
+        # with gr.Accordion(label="Settings", open=False, elem_id="accordion"):
+        # with gr.Row(variant="compact"):
+        #     explainer_name = gr.Radio(
+        #         label="Explainer",
+        #         choices=list(EXPLAINERS.keys()),
+        #         value=list(EXPLAINERS.keys())[0],
+        #         container=True,
+        #     )
+        # with gr.Row(variant="compact"):
+        #     upper_percentile = gr.Textbox(label="Upper", value="85", container=True)
+        #     middle_percentile = gr.Textbox(
+        #         label="Middle", value="75", container=True
+        #     )
+        #     lower_percentile = gr.Textbox(label="Lower", value="10", container=True)
 
-            # with gr.Row(variant="compact"):
-            #     model_name = gr.Radio(
-            #         label="Model",
-            #         choices=list(MODELS.keys()),
-            #         value=list(MODELS.keys())[0],
-            #         container=True,
-            #     )
-            # with gr.Row(variant="compact"):
-            #     perturber_name = gr.Radio(
-            #         label="Perturber",
-            #         choices=list(PERTURBERS.keys()),
-            #         value=list(PERTURBERS.keys())[0],
-            #         container=True,
-            #     )
-            # with gr.Row(variant="compact"):
-            #     comparator_name = gr.Radio(
-            #         label="Comparator",
-            #         choices=list(COMPARATORS.keys()),
-            #         value=list(COMPARATORS.keys())[0],
-            #         container=True,
-            #     )
+        # with gr.Row(variant="compact"):
+        #     model_name = gr.Radio(
+        #         label="Model",
+        #         choices=list(MODELS.keys()),
+        #         value=list(MODELS.keys())[0],
+        #         container=True,
+        #     )
+        # with gr.Row(variant="compact"):
+        #     perturber_name = gr.Radio(
+        #         label="Perturber",
+        #         choices=list(PERTURBERS.keys()),
+        #         value=list(PERTURBERS.keys())[0],
+        #         container=True,
+        #     )
+        # with gr.Row(variant="compact"):
+        #     comparator_name = gr.Radio(
+        #         label="Comparator",
+        #         choices=list(COMPARATORS.keys()),
+        #         value=list(COMPARATORS.keys())[0],
+        #         container=True,
+        #     )
         with gr.Row(variant="compact"):
             # passing "elem_id" to use a custom style for the component
             # in the CSS passed.
@@ -303,45 +307,50 @@ class RagExplainerUI:
             label="Retrieve and Explain!", open=False, elem_id="accordion"
         ):
             with gr.Row():
-                retrieved_document = gr.Markdown(
-                    label="Retrieved Document",
-                    container=True,
-                    # interactive=False,
-                )
-            with gr.Row():
-                retriever_vis = gr.HTML(label="Retriever Explanations")
+                with gr.Column(scale=1):
+                    gr.Markdown("🔍 **User Query** (input to the Retriever)")
+                    with gr.Row():
+                        user_input_text = gr.Markdown(container=True)
+
+                    gr.Markdown("📝 **Retrieved document** (output from the Retriever)")
+                    with gr.Row():
+                        retrieved_document = gr.Markdown(container=True)
+
+                with gr.Column(scale=1):
+                    gr.Markdown("✨ **Explaining the Retrieval process**")
+                    with gr.Row():
+                        retriever_vis = gr.HTML(container=True)
 
         with gr.Accordion(
             label="Generate and Explain!", open=False, elem_id="accordion"
         ):
             with gr.Row():
-                prompt = gr.Markdown(
-                    label="Prompt to the LLM",
-                    container=True,
-                    # interactive=False,
-                )
+                with gr.Column(scale=1):
+                    gr.Markdown("❓ **Prompt** (input to the Generator)")
+                    with gr.Row():
+                        prompt = gr.Markdown(container=True)
 
-            with gr.Row():
-                generated_response = gr.Markdown(
-                    label="Generated Response",
-                    container=True,
-                    # interactive=False,
-                )
+                    gr.Markdown("✔️ **Generated Response** (output from the Generator)")
+                    with gr.Row():
+                        generated_response = gr.Markdown(container=True)
 
-            with gr.Row():
-                generator_vis = gr.HTML(label="Generator Explanations")
+                with gr.Column(scale=1):
+                    gr.Markdown("✨ **Explaining the Generation process**")
+                    with gr.Row():
+                        generator_vis = gr.HTML(container=True)
 
         return (
             user_input,
             granularity,
-            upper_percentile,
-            middle_percentile,
-            lower_percentile,
+            # upper_percentile,
+            # middle_percentile,
+            # lower_percentile,
             # explainer_name,
             # model_name,
             # perturber_name,
             # comparator_name,
             submit_btn,
+            user_input_text,
             retrieved_document,
             prompt,
             generated_response,
@@ -353,9 +362,9 @@ class RagExplainerUI:
         self,
         text_to_visualize: str,
         explanation_dto: ExplanationDto,
-        upper_percentile: Optional[int],
-        middle_percentile: Optional[int],
-        lower_percentile: Optional[int],
+        upper_percentile: Optional[int] = 85,
+        middle_percentile: Optional[int] = 75,
+        lower_percentile: Optional[int] = 10,
     ) -> str:
         segregator = PercentileBasedCategorizer(
             upper_bound_percentile=upper_percentile,
@@ -366,4 +375,6 @@ class RagExplainerUI:
             segregator=segregator,
             explanations=explanation_dto,
             output_from_explanations=text_to_visualize,
+            avoid_exp_label=True,
+            avoid_legend=True,
         )
