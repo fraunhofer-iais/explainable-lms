@@ -10,7 +10,7 @@ In this work, we borrow ideas presented in our earlier works attempting to indiv
 ## Change log
 
 - **v2.0:** Added retriever explanations, added interface for building RAG System. Find the release here.
-- **v1.0:** Added generator explanations. Find the release here.
+- **v1.0:** Added generator explanations. Find the release [here](https://github.com/fraunhofer-iais/explainable-lms/releases/tag/v1.0).
 
 ## How to use RAG-Ex?
 
