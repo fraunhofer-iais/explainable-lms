@@ -1,20 +1,16 @@
-# 🦉 RAG-Ex: A generic framework for explaining Retrieval Augmented Generation
+# 🦉 RAG-Ex 2.0: Towards End-to-End Model-Agnostic Explanations for RAG Systems
 
-Recent advancement of large language models (LLMs) has led to their seamless adoption in real-world applications,
-including Retrieval Augmented Generation (RAG) in Question Answering (QA) tasks. However, owing to their size and
-complexity, LLMs offer little to no explanations for why they generate a response, given the input. Such a "black-box"
-ascription of LLMs effectively reduces the trust and confidence of end users in the emerging LLM-based RAG systems. In
-this work, we introduce RAG-Ex, a model- and language-agnostic explanation framework that presents approximate
-explanations to the users revealing why the LLMs possibly generated a piece of text as a response, given the user input.
-Our framework is compatible with both open-source and proprietary LLMs. We report the significance scores of the
-approximated explanations from our generic explainer in both English and German QA tasks and also study their
-correlation with the downstream performance of the LLMs. In the extensive user studies, we observed that our explainer
-yields an F1-score of 76.9\% against the end user annotations and attains almost in-par performance with model-intrinsic
-approaches.
+RAG systems aim at improving response generation of Large Language Models (LLMs). 
+With the help of the context provided by the user as input prompt, these systems are capable of generating more reliable responses. A typical RAG system is composed of a retriever in conjunction with a generator. Given a user question $q$, the retriever returns the most relevant documents $d_i$ from a collection. These documents together with an instruction composes the prompt $x$ which is then fed to the LLM-based generator. 
+The generator finally returns a more reliable response $y$ to the user. This response is more reliable than the LLM generating an answer from its model weights alone. 
+However, since the models used are not intrinsically explainable, end-users often find such RAG systems less trustworthy. 
+In this work, we borrow ideas presented in our earlier works attempting to individually explain the retriever and the generator; and combine these strategies to build a holistic end-to-end framework towards model agnostic explanations for RAG systems. Our framework can explain retrievers (utilizing dense embedding models) and generators of any kind in an open-book QA setup. 
 
-![readme_banner.png](xlm%2Fui%2Fimages%2Freadme_banner.png)
 
-Find the demo application [here](https://huggingface.co/spaces/vijusudhi/rag-ex).
+## Change log
+
+- **v2.0:** Added retriever explanations, added interface for building RAG System. Find the release here.
+- **v1.0:** Added generator explanations. Find the release here.
 
 ## How to use RAG-Ex?
 
@@ -40,7 +36,13 @@ You can start the UI for RAG-Ex with: `python -m xlm.start`.
 
 ### Step 3: Use RAG-Ex
 
-The most important settings are as follows:
+#### Examples
+- To run generator explanations alone, follow the example [here](https://github.com/fraunhofer-iais/explainable-lms/blob/53d4eb0456e37bd91a9901d414d150a624ea69b0/examples/run_generic_generator_explainer.py).
+- To run retriever explanations alone, follow the example [here](https://github.com/fraunhofer-iais/explainable-lms/blob/53d4eb0456e37bd91a9901d414d150a624ea69b0/examples/run_generic_retriever_explainer.py).
+- To compose a RAG system and run retriever and generator explanations, follow the example [here](https://github.com/fraunhofer-iais/explainable-lms/blob/9805c0847b5fe2284e2523991935ea70d9c7932e/examples/run_rag_system.py). 
+
+ 
+In the UI, follow the settings below:
 
 #### Question
 
@@ -91,26 +93,3 @@ The comparator determines how the gap between the original output and the pertur
 | `n_gram_comparator`                      | The sentences are split into adjacent word chunks of length n. The more chunks match, the closer the<br>sentences are.                         |
 
 ## Citation
-
-To use RAG-Ex in your publication, please cite it by using the following BibTeX entry.
-
-```
-@inproceedings{10.1145/3626772.3657660,
-    author = {Sudhi, Viju and Bhat, Sinchana Ramakanth and Rudat, Max and Teucher, Roman},
-    title = {RAG-Ex: A Generic Framework for Explaining Retrieval Augmented Generation},
-    year = {2024},
-    isbn = {9798400704314},
-    publisher = {Association for Computing Machinery},
-    address = {New York, NY, USA},
-    url = {https://doi.org/10.1145/3626772.3657660},
-    doi = {10.1145/3626772.3657660},
-    abstract = {Owing to their size and complexity, large language models (LLMs) hardly explain why they generate a response. This effectively reduces the trust and confidence of end users in LLM-based applications, including Retrieval Augmented Generation (RAG) for Question Answering (QA) tasks. In this work, we introduce RAG-Ex, a model- and language-agnostic explanation framework that presents approximate explanations to the users revealing why the LLMs possibly generated a piece of text as a response, given the user input. Our framework is compatible with both open-source and proprietary LLMs. We report the significance scores of the approximated explanations from our generic explainer in both English and German QA tasks and also study their correlation with the downstream performance of LLMs. In the extensive user studies, our explainer yields an F1-score of 76.9\% against the end user annotations and attains almost on-par performance with model-intrinsic approaches.},
-    booktitle = {Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval},
-    pages = {2776–2780},
-    numpages = {5},
-    keywords = {explainability, large language models, retrieval augmented generation},
-    location = {Washington DC, USA},
-    series = {SIGIR '24}
-}
-```
-
