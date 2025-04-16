@@ -93,3 +93,25 @@ The comparator determines how the gap between the original output and the pertur
 | `n_gram_comparator`                      | The sentences are split into adjacent word chunks of length n. The more chunks match, the closer the<br>sentences are.                         |
 
 ## Citation
+
+To use RAG-Ex in your publication, please cite it by using the following BibTeX entry.
+
+```
+@inproceedings{10.1145/3626772.3657660,
+    author = {Sudhi, Viju and Bhat, Sinchana Ramakanth and Rudat, Max and Teucher, Roman},
+    title = {RAG-Ex: A Generic Framework for Explaining Retrieval Augmented Generation},
+    year = {2024},
+    isbn = {9798400704314},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3626772.3657660},
+    doi = {10.1145/3626772.3657660},
+    abstract = {Owing to their size and complexity, large language models (LLMs) hardly explain why they generate a response. This effectively reduces the trust and confidence of end users in LLM-based applications, including Retrieval Augmented Generation (RAG) for Question Answering (QA) tasks. In this work, we introduce RAG-Ex, a model- and language-agnostic explanation framework that presents approximate explanations to the users revealing why the LLMs possibly generated a piece of text as a response, given the user input. Our framework is compatible with both open-source and proprietary LLMs. We report the significance scores of the approximated explanations from our generic explainer in both English and German QA tasks and also study their correlation with the downstream performance of LLMs. In the extensive user studies, our explainer yields an F1-score of 76.9\% against the end user annotations and attains almost on-par performance with model-intrinsic approaches.},
+    booktitle = {Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+    pages = {2776–2780},
+    numpages = {5},
+    keywords = {explainability, large language models, retrieval augmented generation},
+    location = {Washington DC, USA},
+    series = {SIGIR '24}
+}
+```
