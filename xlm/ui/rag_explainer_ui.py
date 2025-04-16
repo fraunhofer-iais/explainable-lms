@@ -142,7 +142,7 @@ class RagExplainerUI:
 
         generator_explanation_granularity = ExplanationGranularity.SENTENCE_LEVEL
         generator_explanation_dto = self.generator_explainer.explain(
-            user_input=user_input,
+            user_input=rag_output.prompt,
             reference_text=rag_output.generated_responses[0],
             reference_score=None,
             granularity=generator_explanation_granularity,
