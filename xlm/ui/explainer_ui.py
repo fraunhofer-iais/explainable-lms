@@ -1,24 +1,24 @@
 from typing import List, Optional
 import gradio as gr
 from gradio.components import Markdown
-from xlm.registry.comparators import COMPARATORS
+from xlm.registry import COMPARATORS
 from xlm.registry.explainers import load_explainer, EXPLAINERS
-from xlm.registry.models import MODELS
-from xlm.registry.perturbers import PERTURBERS
+from xlm.registry import MODELS
+from xlm.registry import PERTURBERS
 from xlm.utils.categorizer import PercentileBasedCategorizer
-from xlm.visualizer.visualizer import Visualizer
+from xlm.utils.visualizer import Visualizer
 from xlm.dto.dto import ExplanationDto, ExplanationGranularity
 
 
 class ExplainerUI:
     def __init__(
-            self,
-            logo_path: str,
-            css_path: str,
-            visualizer: Visualizer,
-            window_title: str,
-            title: str,
-            examples: Optional[List[str]] = None,
+        self,
+        logo_path: str,
+        css_path: str,
+        visualizer: Visualizer,
+        window_title: str,
+        title: str,
+        examples: Optional[List[str]] = None,
     ):
         self.__logo_path = logo_path
         self.__css_path = css_path
@@ -31,13 +31,13 @@ class ExplainerUI:
 
     def build_app(self):
         with gr.Blocks(
-                theme=gr.themes.Monochrome().set(
-                    button_primary_background_fill="#009374",
-                    button_primary_background_fill_hover="#009374C4",
-                    checkbox_label_background_fill_selected="#028A6EFF",
-                ),
-                css=self.__css_path,
-                title=self.__window_title,
+            theme=gr.themes.Monochrome().set(
+                button_primary_background_fill="#009374",
+                button_primary_background_fill_hover="#009374C4",
+                checkbox_label_background_fill_selected="#028A6EFF",
+            ),
+            css=self.__css_path,
+            title=self.__window_title,
         ) as demo:
             self.__build_app_title()
             (
@@ -74,16 +74,16 @@ class ExplainerUI:
         return demo
 
     def run(
-            self,
-            user_input: str,
-            granularity: ExplanationGranularity,
-            upper_percentile: str,
-            middle_percentile: str,
-            lower_percentile: str,
-            explainer_name: str,
-            model_name: str,
-            perturber_name: str,
-            comparator_name: str,
+        self,
+        user_input: str,
+        granularity: ExplanationGranularity,
+        upper_percentile: str,
+        middle_percentile: str,
+        lower_percentile: str,
+        explainer_name: str,
+        model_name: str,
+        perturber_name: str,
+        comparator_name: str,
     ):
         explainer = load_explainer(
             explainer_name=explainer_name,
@@ -213,13 +213,13 @@ class ExplainerUI:
         )
 
     def __visualize_explanations(
-            self,
-            user_input: str,
-            system_response: Optional[str],
-            generator_explanations: ExplanationDto,
-            upper_percentile: Optional[int],
-            middle_percentile: Optional[int],
-            lower_percentile: Optional[int],
+        self,
+        user_input: str,
+        system_response: Optional[str],
+        generator_explanations: ExplanationDto,
+        upper_percentile: Optional[int],
+        middle_percentile: Optional[int],
+        lower_percentile: Optional[int],
     ) -> str:
         segregator = PercentileBasedCategorizer(
             upper_bound_percentile=upper_percentile,

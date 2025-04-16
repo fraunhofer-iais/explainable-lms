@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
 
 
@@ -12,7 +12,7 @@ class FeatureImportance(BaseModel):
 class ExplanationDto(BaseModel):
     explanations: List[FeatureImportance]
     input_text: str
-    output_text: str
+    output_text: Optional[str] = None
 
 
 class ExplanationGranularity(str, Enum):
@@ -24,3 +24,11 @@ class ExplanationGranularity(str, Enum):
 
 class SimilarityMetric(Enum):
     COSINE = "cosine"
+
+
+class RagOutput(BaseModel):
+    retrieved_documents: List[str]
+    retriever_scores: List[float]
+    prompt: str
+    generated_responses: List[str]
+    metadata: Dict[str, Any]

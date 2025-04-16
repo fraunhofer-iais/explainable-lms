@@ -1,7 +1,7 @@
-from xlm.perturber.leave_one_out_perturber import LeaveOneOutPerturber
-from xlm.perturber.llm_based_perturber import LLMBasedPerturber
-from xlm.perturber.random_word_perturber import RandomWordPerturber
-from xlm.perturber.reorder_perturber import ReorderPerturber
+from xlm.modules.perturber.leave_one_out_perturber import LeaveOneOutPerturber
+from xlm.modules.perturber.llm_based_perturber import LLMBasedPerturber
+from xlm.modules.perturber.random_word_perturber import RandomWordPerturber
+from xlm.modules.perturber.reorder_perturber import ReorderPerturber
 
 PERTURBERS = {
     "leave_one_out": LeaveOneOutPerturber(),
@@ -16,8 +16,7 @@ PERTURBERS = {
         "/llm_based_synonym_perturber_template.txt"
     ),
     "entity_perturber": LLMBasedPerturber(
-        template_path="data/prompt_templates"
-        "/llm_based_entity_perturber_template.txt"
+        template_path="data/prompt_templates" "/llm_based_entity_perturber_template.txt"
     ),
 }
 

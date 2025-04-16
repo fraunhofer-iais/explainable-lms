@@ -1,10 +1,14 @@
 from requests import Session
-from xlm.comparator.embedding_comparator import \
-    EmbeddingComparator
-from xlm.comparator.generic_comparator import LevenshteinComparator, JaroWinklerComparator
-from xlm.comparator.n_gram_overlap_comparator import NGramOverlapComparator
-from xlm.encoder.encoder import Encoder
+from xlm.modules.comparator.embedding_comparator import EmbeddingComparator
+from xlm.modules.comparator.generic_comparator import (
+    LevenshteinComparator,
+    JaroWinklerComparator,
+)
+from xlm.modules.comparator.n_gram_overlap_comparator import NGramOverlapComparator
+from xlm.modules.comparator.score_comaprator import ScoreComparator
+from xlm.components.encoder.encoder import Encoder
 from xlm.registry import DEFAULT_LMS_ENDPOINT
+from xlm.registry.encoder import load_encoder
 
 levenshtein_comparator = LevenshteinComparator()
 jaro_winkler_comparator = JaroWinklerComparator()
@@ -16,6 +20,7 @@ sentence_transformers_based_comparator = EmbeddingComparator(
         session=Session(),
     )
 )
+score_comparator = ScoreComparator()
 
 COMPARATORS = {
     "sentence_transformers_based_comparator": sentence_transformers_based_comparator,
@@ -23,18 +28,11 @@ COMPARATORS = {
     "levenshtein_comparator": levenshtein_comparator,
     "jaro_winkler_comparator": jaro_winkler_comparator,
     "n_gram_comparator": n_gram_comparator,
+    "score_comparator": score_comparator,
 }
 
 
-def load_encoder(model_name: str):
-    return Encoder(
-        model_name=model_name,
-        session=Session(),
-        endpoint=DEFAULT_LMS_ENDPOINT,
-    )
-
-
-def load_comparator(comparator_name: str, model_name: str):
+def load_comparator(comparator_name: str, model_name: str = None):
     if comparator_name == "base_llm_based_comparator":
         return EmbeddingComparator(encoder=load_encoder(model_name=model_name))
     else:

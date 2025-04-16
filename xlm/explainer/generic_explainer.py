@@ -1,32 +1,58 @@
+from abc import abstractmethod, ABC
 from typing import List, Optional, Tuple
 
-from xlm.comparator.comparator import Comparator
-from xlm.dto.dto import (
-    ExplanationDto,
-    ExplanationGranularity,
-    FeatureImportance,
-)
+from xlm.dto.dto import ExplanationGranularity, ExplanationDto, FeatureImportance
 from xlm.explainer.explainer import Explainer
-from xlm.generator.generator import Generator
-from xlm.perturber.perturber import Perturber
-from xlm.tokenizer.tokenizer import Tokenizer
+from xlm.modules.comparator.comparator import Comparator
+from xlm.modules.perturber.perturber import Perturber
+from xlm.modules.tokenizer.custom_tokenizer import CustomTokenizer
+from xlm.modules.tokenizer.tokenizer import Tokenizer
 from xlm.utils.scores import sort_similarity_scores
 
 
 class GenericExplainer(Explainer):
     def __init__(
         self,
-        tokenizer: Tokenizer,
         perturber: Perturber,
-        generator: Generator,
         comparator: Comparator,
+        tokenizer: Tokenizer = CustomTokenizer(),
         num_threads: Optional[int] = 10,
     ):
-        self.__tokenizer = tokenizer
-        self.__perturber = perturber
-        self.__generator = generator
-        self.__comparator = comparator
-        self.__num_threads = num_threads
+        self.tokenizer = tokenizer
+        self.perturber = perturber
+        self.comparator = comparator
+        self.num_threads = num_threads
+
+    @abstractmethod
+    def get_reference(self, input_text: str): ...
+
+    @abstractmethod
+    def get_features(
+        self,
+        input_text: str,
+        reference_text: str,
+        reference_score: float,
+        granularity: ExplanationGranularity,
+    ): ...
+
+    @abstractmethod
+    def get_perturbations(
+        self, input_text: str, reference_text: str, features: List[str]
+    ): ...
+
+    @abstractmethod
+    def get_post_perturbation_results(
+        self, input_text: str, perturbations: List[str]
+    ): ...
+
+    @abstractmethod
+    def get_comparator_scores(
+        self,
+        reference_text: str,
+        reference_score: float,
+        results: List[str] | List[float],
+        do_normalize_scores: bool,
+    ): ...
 
     def explain(
         self,
@@ -34,39 +60,39 @@ class GenericExplainer(Explainer):
         granularity: ExplanationGranularity,
         model_name: Optional[str] = None,
         do_normalize_comparator_scores: bool = True,
-        system_response: Optional[str] = None,
+        reference_text: Optional[str] = None,
+        reference_score: Optional[str] = None,
     ) -> ExplanationDto:
-        input_text = user_input
-
-        reference_response = (
-            self.__generator.generate(texts=[input_text], model_name=model_name)[0]
-            if not system_response
-            else system_response
+        features = self.get_features(
+            input_text=user_input,
+            reference_text=reference_text,
+            reference_score=reference_score,
+            granularity=granularity,
         )
 
-        input_features = self.__tokenizer.tokenize(
-            text=input_text, granularity=granularity
+        perturbations = self.get_perturbations(
+            input_text=user_input,
+            reference_text=reference_text,
+            features=features,
         )
 
-        perturbations = self.__perturber.perturb(
-            text=input_text, features=input_features
+        responses = self.get_post_perturbation_results(
+            input_text=user_input,
+            perturbations=perturbations,
         )
 
-        responses = self.__generator.generate(
-            texts=perturbations, model_name=model_name
-        )
-
-        scores = self.__comparator.compare(
-            reference_text=reference_response,
-            texts=responses,
+        scores = self.get_comparator_scores(
+            reference_text=reference_text,
+            reference_score=reference_score,
+            results=responses,
             do_normalize_scores=do_normalize_comparator_scores,
         )
 
         explanation_dto = self.__get_explanation_dto(
-            features=input_features,
+            features=features,
             scores=scores,
-            input_text=input_text,
-            output_text=reference_response,
+            input_text=user_input,
+            # output_text=reference,
         )
 
         return explanation_dto
@@ -76,7 +102,7 @@ class GenericExplainer(Explainer):
         features: List[str],
         scores: List[float],
         input_text: str,
-        output_text: str,
+        output_text: str = None,
     ) -> ExplanationDto:
         features, scores = self.__sort_scores(features, scores)
         return ExplanationDto(
