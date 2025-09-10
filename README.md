@@ -94,12 +94,24 @@ The comparator determines how the gap between the original output and the pertur
 
 ## Citation
 
-To use RAG-Ex in your publication, please cite it by using the following BibTeX entry.
+To use **RAG-Ex 2.0** in your work, please cite it by using the following BibTeX entry.
+
+```
+@article{sudhi2025rag-ex2.0,
+  title={Towards End-to-End Model-Agnostic Explanations for RAG Systems},
+  author={Sudhi, Viju and Bhat, Sinchana Ramakanth and Rudat, Max and Teucher, Roman and Flores-Herr, Nicolas},
+  journal={arXiv preprint arXiv:2509.07620},
+  keywords = {explainability, large language models, retrieval augmented generation},
+  year={2025}
+}
+```
+
+To use **RAG-Ex** in your work, please cite it by using the following BibTeX entry.
 
 ```
 @inproceedings{10.1145/3626772.3657660,
-    author = {Sudhi, Viju and Bhat, Sinchana Ramakanth and Rudat, Max and Teucher, Roman},
     title = {RAG-Ex: A Generic Framework for Explaining Retrieval Augmented Generation},
+    author = {Sudhi, Viju and Bhat, Sinchana Ramakanth and Rudat, Max and Teucher, Roman},
     year = {2024},
     isbn = {9798400704314},
     publisher = {Association for Computing Machinery},
